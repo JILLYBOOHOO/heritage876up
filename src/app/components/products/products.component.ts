@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
 
@@ -116,10 +116,16 @@ export class ProductsComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private productService: ProductService
+    private productService: ProductService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      this.products = [...this.fallbackProducts];
+      return;
+    }
+
     this.productService.getProducts().subscribe({
       next: (data) => {
         this.products = data.map(p => ({

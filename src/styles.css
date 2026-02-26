@@ -1,0 +1,117 @@
+/* Custom Font */
+@font-face {
+    font-family: 'TheFont';
+    src: url("https://garet.typeforward.com/assets/fonts/shared/TFMixVF.woff2") format('woff2');
+}
+
+/* You can add global styles to this file, and also import other style files */
+:root {
+    /* Brand Colors */
+    --ja-green: #009b3a;
+    --ja-yellow: #fed100;
+    --ja-black: #000000;
+
+    /* Light Theme (Default) */
+    --bg-primary: #f4f4f4;
+    --bg-secondary: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #555555;
+    --text-light: #ffffff;
+    --border-color: #dddddd;
+    --header-bg: #000000;
+    --header-text: #ffffff;
+    --input-bg: #ffffff;
+    --input-text: #000000;
+}
+
+:root[data-theme='dark'] {
+    /* Dark Theme Setup */
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --text-primary: #e0e0e0;
+    --text-secondary: #aaaaaa;
+    --border-color: #333333;
+    --header-bg: #1e1e1e;
+    --header-text: #e0e0e0;
+    --input-bg: #2d2d2d;
+    --input-text: #e0e0e0;
+}
+
+.brand-font {
+    font-family: 'TheFont', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', 'Roboto', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+/* Global button styles to ensure consistency and animations */
+.btn,
+button {
+    background-color: var(--ja-black);
+    color: var(--ja-yellow);
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--ja-black);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn:hover,
+button:hover {
+    background-color: var(--ja-green);
+    color: var(--text-light);
+    border-color: var(--ja-green);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(0, 155, 58, 0.4);
+}
+
+.btn:active,
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 155, 58, 0.3);
+}
+
+/* Optional wrapper if app root acts as flex container */
+app-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+@media (max-width: 480px) {
+    .btn,
+    button {
+        width: 100%;
+    }
+}

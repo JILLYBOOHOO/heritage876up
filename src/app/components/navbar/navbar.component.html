@@ -1,0 +1,30 @@
+<nav class="navbar" aria-label="Main Navigation">
+    <div class="logo brand-font" aria-label="heritage 876 Logo">heritage 876</div>
+    <ul class="nav-links">
+        <li><a routerLink="/">Home</a></li>
+        <li><a routerLink="/products">Products</a></li>
+        <li><a routerLink="/checkout">Checkout</a></li>
+        <li *ngIf="!currentUser"><a routerLink="/login">Login</a></li>
+        <li *ngIf="currentUser">
+            <button routerLink="/dashboard" class="welcome-btn">
+                Welcome, {{ currentUser.user?.name || currentUser.name }}
+            </button>
+        </li>
+        <li *ngIf="currentUser">
+            <button (click)='onLogout()' class='logout-btn'>Logout</button>
+        </li>
+        <li><a routerLink="/contact-us">Contact Us</a></li>
+        <li>
+            <a routerLink="/checkout" class="cart-icon" aria-label="Shopping Cart">
+                🛒
+                <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+            </a>
+        </li>
+        <li>
+            <button class="theme-toggle" (click)="toggleTheme()"
+                [attr.aria-label]="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                {{ isDarkMode ? '☀️ Light' : '🌙 Dark' }}
+            </button>
+        </li>
+    </ul>
+</nav>

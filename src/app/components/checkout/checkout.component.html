@@ -1,0 +1,277 @@
+<section class="checkout">
+    <h2>Checkout</h2>
+
+    <!-- Progress Steps -->
+    <div class="progress-bar">
+        <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+            <div class="step-number">{{ currentStep > 1 ? '✓' : '1' }}</div>
+            <span class="step-label">Cart</span>
+        </div>
+        <div class="step-line" [class.active]="currentStep > 1"></div>
+        <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+            <div class="step-number">{{ currentStep > 2 ? '✓' : '2' }}</div>
+            <span class="step-label">Shipping</span>
+        </div>
+        <div class="step-line" [class.active]="currentStep > 2"></div>
+        <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
+            <div class="step-number">{{ currentStep > 3 ? '✓' : '3' }}</div>
+            <span class="step-label">Payment</span>
+        </div>
+        <div class="step-line" [class.active]="currentStep > 3"></div>
+        <div class="step" [class.active]="currentStep >= 4">
+            <div class="step-number">4</div>
+            <span class="step-label">Done</span>
+        </div>
+    </div>
+
+    <!-- Step 1: Cart Review -->
+    <div class="checkout-step" *ngIf="currentStep === 1">
+        <div class="checkout-container" *ngIf="cartItems.length > 0; else emptyCart">
+            <div class="cart-items">
+                <h3>Your Cart</h3>
+                <div class="cart-item" *ngFor="let item of cartItems">
+                    <img [src]="item.image" [alt]="item.name" class="cart-item-img">
+                    <div class="cart-item-info">
+                        <h4>{{ item.name }}</h4>
+                        <p class="item-price">JA${{ formatPrice(item.price) }}</p>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="qty-btn" (click)="updateQuantity(item.name, item.quantity - 1)"
+                            aria-label="Decrease quantity">−</button>
+                        <span class="qty">{{ item.quantity }}</span>
+                        <button class="qty-btn" (click)="updateQuantity(item.name, item.quantity + 1)"
+                            aria-label="Increase quantity">+</button>
+                    </div>
+                    <p class="item-total">JA${{ formatPrice(item.price * item.quantity) }}</p>
+                    <button class="remove-btn" (click)="removeItem(item.name)" aria-label="Remove item">✕</button>
+                </div>
+            </div>
+
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>JA${{ formatPrice(subtotal) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>{{ shipping_cost === 0 ? 'FREE' : 'JA$' + formatPrice(shipping_cost) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (15% GCT)</span>
+                    <span>JA${{ formatPrice(tax) }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>JA${{ formatPrice(total) }}</span>
+                </div>
+                <p class="free-shipping-note" *ngIf="subtotal < 10000">
+                    🚚 Spend JA${{ formatPrice(10000 - subtotal) }} more for free shipping!
+                </p>
+                <button class="checkout-btn" (click)="nextStep()">Continue to Shipping</button>
+            </div>
+        </div>
+
+        <ng-template #emptyCart>
+            <div class="empty-cart">
+                <div class="empty-cart-icon">🛒</div>
+                <h3>Your cart is empty</h3>
+                <p>Browse our products and add items to your cart.</p>
+                <a routerLink="/products" class="btn shop-btn">Shop Now</a>
+            </div>
+        </ng-template>
+    </div>
+
+    <!-- Step 2: Shipping Information -->
+    <div class="checkout-step" *ngIf="currentStep === 2">
+        <div class="checkout-container">
+            <div class="form-section">
+                <h3>Shipping Information</h3>
+                <form class="shipping-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" [(ngModel)]="shipping.fullName" name="fullName"
+                                placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" [(ngModel)]="shipping.email" name="email"
+                                placeholder="you@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" [(ngModel)]="shipping.phone" name="phone"
+                                placeholder="(876) 000-0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Street Address *</label>
+                            <input type="text" id="address" [(ngModel)]="shipping.address" name="address"
+                                placeholder="123 Main Street" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City *</label>
+                            <input type="text" id="city" [(ngModel)]="shipping.city" name="city" placeholder="Kingston"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="parish">Parish *</label>
+                            <select id="parish" [(ngModel)]="shipping.parish" name="parish" required>
+                                <option value="" disabled>Select a parish</option>
+                                <option *ngFor="let p of parishes" [value]="p">{{ p }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="zip">Postal Code</label>
+                            <input type="text" id="zip" [(ngModel)]="shipping.zip" name="zip" placeholder="Optional">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="order-summary compact">
+                <h3>Order Summary</h3>
+                <div class="summary-items">
+                    <div class="summary-item" *ngFor="let item of cartItems">
+                        <span>{{ item.name }} × {{ item.quantity }}</span>
+                        <span>JA${{ formatPrice(item.price * item.quantity) }}</span>
+                    </div>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>JA${{ formatPrice(total) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-actions">
+            <button class="back-btn" (click)="prevStep()">← Back to Cart</button>
+            <button class="checkout-btn" (click)="nextStep()" [disabled]="!isShippingValid()">Continue to
+                Payment</button>
+        </div>
+    </div>
+
+    <!-- Step 3: Payment (Mock Gateway) -->
+    <div class="checkout-step" *ngIf="currentStep === 3">
+        <div class="checkout-container">
+            <div class="form-section payment-section">
+                <div class="payment-header">
+                    <h3>Payment Details</h3>
+                    <div class="secure-badge">🔒 Secure Payment</div>
+                </div>
+
+                <div class="mock-gateway">
+                    <div class="gateway-brand">
+                        <span class="gateway-logo">💳</span>
+                        <span class="gateway-name">Heritage876 Pay</span>
+                    </div>
+
+                    <form class="payment-form">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <div class="card-input-wrapper">
+                                <input type="text" id="cardNumber" (input)="formatCardNumber($event)" name="cardNumber"
+                                    placeholder="1234 5678 9012 3456" maxlength="19" required>
+                                <span class="card-icons">💳</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardName">Cardholder Name</label>
+                            <input type="text" id="cardName" [(ngModel)]="payment.cardName" name="cardName"
+                                placeholder="Name on card" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiry">Expiry Date</label>
+                                <input type="text" id="expiry" (input)="formatExpiry($event)" name="expiry"
+                                    placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" [(ngModel)]="payment.cvv" name="cvv" placeholder="123"
+                                    maxlength="4" required>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="test-card-info">
+                        <p><strong>🧪 Test Mode:</strong> Use card number <code>4242 4242 4242 4242</code> with any
+                            future expiry and any 3-digit CVV.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-summary compact">
+                <h3>Order Summary</h3>
+                <div class="summary-items">
+                    <div class="summary-item" *ngFor="let item of cartItems">
+                        <span>{{ item.name }} × {{ item.quantity }}</span>
+                        <span>JA${{ formatPrice(item.price * item.quantity) }}</span>
+                    </div>
+                </div>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>JA${{ formatPrice(subtotal) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>{{ shipping_cost === 0 ? 'FREE' : 'JA$' + formatPrice(shipping_cost) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (15% GCT)</span>
+                    <span>JA${{ formatPrice(tax) }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>JA${{ formatPrice(total) }}</span>
+                </div>
+                <p class="shipping-to">📦 Shipping to: {{ shipping.address }}, {{ shipping.city }}, {{ shipping.parish
+                    }}</p>
+            </div>
+        </div>
+
+        <div class="step-actions">
+            <button class="back-btn" (click)="prevStep()">← Back to Shipping</button>
+            <button class="pay-btn" (click)="processPayment()" [disabled]="!isPaymentValid() || isProcessing">
+                <span *ngIf="!isProcessing">🔒 Pay JA${{ formatPrice(total) }}</span>
+                <span *ngIf="isProcessing" class="processing">
+                    <span class="spinner"></span> Processing...
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 4: Order Confirmation -->
+    <div class="checkout-step" *ngIf="currentStep === 4">
+        <div class="confirmation">
+            <div class="confirm-icon">✅</div>
+            <h3>Order Confirmed!</h3>
+            <p class="order-number">Order Number: <strong>{{ orderNumber }}</strong></p>
+            <p class="confirm-msg">Thank you for your purchase! A confirmation email has been sent to <strong>{{
+                    shipping.email }}</strong>.</p>
+
+            <div class="confirm-details">
+                <div class="confirm-section">
+                    <h4>Shipping To</h4>
+                    <p>{{ shipping.fullName }}</p>
+                    <p>{{ shipping.address }}</p>
+                    <p>{{ shipping.city }}, {{ shipping.parish }}</p>
+                    <p>{{ shipping.phone }}</p>
+                </div>
+                <div class="confirm-section">
+                    <h4>Payment</h4>
+                    <p>Card ending in {{ payment.cardNumber.slice(-4) }}</p>
+                    <p class="confirm-total">Total Charged: <strong>JA${{ formatPrice(total) }}</strong></p>
+                </div>
+            </div>
+
+            <a routerLink="/products" class="btn shop-btn">Continue Shopping</a>
+        </div>
+    </div>
+</section>

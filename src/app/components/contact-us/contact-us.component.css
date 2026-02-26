@@ -1,0 +1,29 @@
+.contact-us {
+    padding: 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contact-us form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-us input,
+.contact-us textarea {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Inherits .btn for the button from styles.css */
+
+@media (max-width: 480px) {
+    .contact-us {
+        padding: 1.5rem 1rem;
+    }
+}

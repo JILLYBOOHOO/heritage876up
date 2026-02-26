@@ -1,0 +1,15 @@
+<section class="login">
+    <div class="login-card">
+        <h2>Login</h2>
+        <div *ngIf="error" class="error-message">{{ error }}</div>
+        <form (ngSubmit)="onLogin()">
+            <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="Email" autocomplete="email"
+                required>
+            <input type="password" [(ngModel)]="credentials.password" name="password" placeholder="Password"
+                autocomplete="current-password" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p>Don't have an account?</p>
+        <a routerLink="/register" class="btn-secondary">Register here</a>
+    </div>
+</section>

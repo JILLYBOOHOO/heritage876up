@@ -1,0 +1,20 @@
+<section class="profile">
+    <div class="profile-card">
+        <h2>My Profile</h2>
+        <div class="profile-info">
+            <div class="info-group">
+                <label>Full Name</label>
+                <p>{{ currentUser?.user?.name || currentUser?.name }}</p>
+            </div>
+            <div class="info-group">
+                <label>Email Address</label>
+                <p>{{ currentUser?.user?.email || currentUser?.email }}</p>
+            </div>
+            <div class="info-group">
+                <label>Account Created</label>
+                <p>{{ (currentUser?.user?.created_at || currentUser?.created_at) | date:'mediumDate' }}</p>
+            </div>
+        </div>
+        <button class="btn" routerLink="/dashboard">Back to Dashboard</button>
+    </div>
+</section>

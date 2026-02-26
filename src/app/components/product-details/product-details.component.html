@@ -1,0 +1,13 @@
+<section class="product-details">
+    <div class="product-details-container">
+        <div class="product-image">
+            <img [src]="product.image" alt="{{ product.name }}">
+        </div>
+        <div class="product-info">
+            <h2>{{ product.name }}</h2>
+            <p class="description">{{ product.description }}</p>
+            <p class="price">JA${{ product.price }}</p>
+            <button [attr.aria-label]="'Add ' + product.name + ' to cart'">Add to Cart</button>
+        </div>
+    </div>
+</section>      
